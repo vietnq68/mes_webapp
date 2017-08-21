@@ -70,6 +70,12 @@ TEMPLATES = [
     },
 ]
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'mes_webapp/static'),
+    os.path.join(BASE_DIR, 'dashboard/static'),
+    os.path.join(BASE_DIR, 'dashboard/static/metronic'),
+]
+
 WSGI_APPLICATION = 'mes_webapp.wsgi.application'
 
 
