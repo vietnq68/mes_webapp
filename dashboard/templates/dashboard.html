@@ -52,7 +52,7 @@
                 </div>
                 <div class="details">
                     <div class="number">
-                        0
+                        <span id="error_number">0</span>
                     </div>
                     <div class="desc">
                         Errors
@@ -80,6 +80,14 @@
   socket.on('finished_product_event',function(msg) {
   console.log(msg);
     var span = $('#finished_number');
+
+    var number = parseInt(span.text());
+    console.log(number);
+    span.text(number+1);
+  });
+  socket.on('error_product_event',function(msg) {
+  console.log(msg);
+    var span = $('#error_number');
 
     var number = parseInt(span.text());
     console.log(number);
