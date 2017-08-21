@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block main %}
+
+{% block header %}
+    {% include "app_header.html" %}
+{% endblock %}
+<div class="clearfix">
+</div>
+<div class="page-container">
+    <div class="page-content-wrapper">
+        <!--<div class="page-content">-->
+            {% block page_content %}
+            {% endblock %}
+        <!--</div>-->
+    </div>
+</div>
+{% include "app_footer.html" %}
+{% endblock %}
