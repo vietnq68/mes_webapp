@@ -1,9 +1,12 @@
 {% extends "app_base.html" %}
 
+{% load template_tag_extras %}
+
 {% block page_content %}
 <div class="page-content" style="min-height:257px">
     <h3 class="page-title">
-        MES Dashboard<small> realtime statistics and more</small>
+        MES Dashboard
+        <small> realtime statistics and more</small>
     </h3>
     <div class="page-bar">
         <ul class="page-breadcrumb">
@@ -25,46 +28,140 @@
         </div>
     </div>
     <!-- END PAGE HEADER-->
-    <!-- BEGIN DASHBOARD STATS -->
+
     <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <div class="dashboard-stat blue-madison">
-                <div class="visual">
-                    <i class="fa fa-comments"></i>
-                </div>
-                <div class="details">
-                    <div class="number">
-                        <span id="finished_number">0</span>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <!-- BEGIN DASHBOARD STATS -->
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat blue-madison">
+                        <div class="visual">
+                            <i class="fa fa-comments"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span id="finished_number">0</span>
+                            </div>
+                            <div class="desc">
+                                Finished Products
+                            </div>
+                        </div>
+                        <a class="more" href="javascript:;">
+                            View more <i class="m-icon-swapright m-icon-white"></i>
+                        </a>
                     </div>
-                    <div class="desc">
-                        Finished Products
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat red-intense">
+                        <div class="visual">
+                            <i class="fa fa-bar-chart-o"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span id="error_number">0</span>
+                            </div>
+                            <div class="desc">
+                                Errors
+                            </div>
+                        </div>
+                        <a class="more" href="javascript:;">
+                            View more <i class="m-icon-swapright m-icon-white"></i>
+                        </a>
                     </div>
                 </div>
-                <a class="more" href="javascript:;">
-                    View more <i class="m-icon-swapright m-icon-white"></i>
-                </a>
+            </div>
+            <!-- END DASHBOARD STATS -->
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <!-- BEGIN TABLE STATS -->
+                    <div class="portlet box blue">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-comments"></i>Products
+                            </div>
+                            <div class="tools">
+                                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title=""
+                                   title=""> </a>
+                                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+                                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-scrollable">
+                                <table class="table table-bordered table-hover" id="table_report">
+                                    <thead>
+                                    <tr>
+                                        <th> ID</th>
+                                        <th> Current Station</th>
+                                        <th> Next Station</th>
+                                        <th> Process</th>
+                                        <th> Time Scan</th>
+                                        <th> Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in products %}
+                                    <tr id="{{ item.pcb_id }}" class="{% if item.status == 'Pass' %}active{% elif item.status == 'Fail' %}danger{% endif %}">
+                                        <td> {{ item.pcb_id }}</td>
+                                        {% if item.current_wrkstn_id %}
+                                            {% for works in workstations %}
+                                                {% if works|get:"_id" == item.current_wrkstn_id %}
+                                                <td> {{ works.name }}</td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <td>Stand by</td>
+                                        {% endif %}
+
+                                        {% for works in workstations %}
+                                        {% if works|get:"_id" == item.next_wrkstn_id %}
+                                        <td id="{{ item.pcb_id }}_nextstation"> {{ works.name }}</td>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <td id="{{ item.pcb_id }}_process">
+
+                                        </td>
+                                        <td> {{ item.scan_time }}</td>
+                                        <td id="{{ item.pcb_id }}_status"> {{ item.status }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END TABLE STATS -->
+                </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <div class="dashboard-stat red-intense">
-                <div class="visual">
-                    <i class="fa fa-bar-chart-o"></i>
+
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <!-- BEGIN PARETO CHART -->
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div id="chartDiv"></div>
                 </div>
-                <div class="details">
-                    <div class="number">
-                        <span id="error_number">0</span>
-                    </div>
-                    <div class="desc">
-                        Errors
-                    </div>
-                </div>
-                <a class="more" href="javascript:;">
-                    View more <i class="m-icon-swapright m-icon-white"></i>
-                </a>
             </div>
+            <!-- END PARETO CHART-->
+
+            <div class="rơw">
+                <!-- BEGIN OEE CHAARTRT -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div id="oee_chart"></div>
+                </div>
+                <!-- END OEE CH-->
+
+                <!-- BEGIN REALTIME CHAARTRT -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div id="realtime_chart"></div>
+                </div>
+                <!-- END REALTIME CHART -->
+            </div>
+
         </div>
     </div>
-    <!-- END DASHBOARD STATS -->
+
     <div class="clearfix">
     </div>
 
@@ -78,20 +175,411 @@
 <script>
   var socket = io('http://localhost:8090');
   socket.on('finished_product_event',function(msg) {
-  console.log(msg);
+    console.log(msg);
     var span = $('#finished_number');
 
     var number = parseInt(span.text());
     console.log(number);
     span.text(number+1);
+
+    pass++;
+    var availability = parseFloat((na / (pass + error + na) * 100.0).toFixed(2));
+    var performance = parseFloat((pass / (pass + error + na) * 100.0).toFixed(2));
+    var quality = parseFloat((pass / (pass + error) * 100.0).toFixed(2));
+    updateOEEChart([availability, performance, quality]);
   });
   socket.on('error_product_event',function(msg) {
-  console.log(msg);
+    console.log(msg);
     var span = $('#error_number');
 
     var number = parseInt(span.text());
     console.log(number);
     span.text(number+1);
+
+    error++;
+    var availability = parseFloat((na / (pass + error + na) * 100.0).toFixed(2));
+    var performance = parseFloat((pass / (pass + error + na) * 100.0).toFixed(2));
+    var quality = parseFloat((pass / (pass + error) * 100.0).toFixed(2));
+    updateOEEChart([availability, performance, quality]);
   });
+  socket.on('workstation_process',function(msg) {
+    console.log(msg);
+    updateProcess(msg);
+  });
+  socket.on('paretoChart',function(msg) {
+    console.log(msg);
+    updateErrorParetoChart(msg);
+  });
+
+  // table_report
+  socket.on('update_event',function(msg) {
+    console.log(msg);
+    var id = msg.pcb_id;
+    updateRow(id, msg);
+    if(msg.current_wrkstn_name == "Top workstation")
+        line_1_process = 1;
+    else if(msg.current_wrkstn_name == "Bot workstation")
+        line_2_process = 1;
+  });
+
+  function insertRow(index, data, status)
+  {
+    var table = document.getElementById("table_report");
+    var row = table.insertRow(index);
+    row.id = data.pcb_id;
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
+    cell1.innerHTML = "<i class='fa fa-spinner fa-pulse'></i>&nbsp&nbsp&nbsp"+data.pcb_id;
+    cell2.innerHTML = "<i class='fa fa-angle-double-right'></i>&nbsp&nbsp&nbsp"+data.current_wrkstn_name;
+    if(data.next_wrkstn_name != undefined)
+        cell3.innerHTML = "<i class='fa fa-angle-double-right'></i>&nbsp&nbsp&nbsp"+data.next_wrkstn_name;
+    else
+        cell3.innerHTML = "";
+    cell3.id = data.pcb_id+"_nextstation";
+    cell4.id = data.pcb_id+"_process";
+    cell5.innerHTML = data.scan_time;
+    cell6.innerHTML = status;
+    cell6.id = data.pcb_id+"_status";
+
+    var id_ps = data.pcb_id+"_process_value";
+    $("#"+id_ps).remove();
+    $("#"+data.pcb_id+"_process").append(
+                            "<div id = '"+id_ps+"' class='progress-bar progress-bar-striped active' role='progressbar'"+
+                                "aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Processing"+
+                            "</div>");
+    $("#"+data.pcb_id).addClass("blink_class");
+    row.addEventListener("animationend",function(e){
+        $("#"+data.pcb_id).removeClass("blink_class");
+        if(status == "Pass"){
+            $("#"+data.pcb_id).removeClass("danger");
+            $("#"+data.pcb_id).addClass("active");
+        }
+        else if(status == "Fail"){
+            $("#"+data.pcb_id).removeClass("active");
+            $("#"+data.pcb_id).addClass("danger");
+        }
+        cell1.innerHTML = data.pcb_id;
+        cell2.innerHTML = data.current_wrkstn_name;
+        if(data.next_wrkstn_name != undefined)
+            cell3.innerHTML = data.next_wrkstn_name;
+        else
+            cell3.innerHTML = "";
+    },false);
+  }
+
+  function updateRow(rowid, data)
+  {
+    var row = document.getElementById(rowid);
+    var table = document.getElementById("table_report");
+    if(row != null)
+    {
+      var status = document.getElementById(rowid+"_status").innerHTML;
+      index = row.rowIndex;
+      table.deleteRow(index);
+      insertRow(index, data, status);
+    }
+  }
+
+  function updateProcess(data)
+  {
+    var id = data.pcb_id+"_process";
+    var id_ps = data.pcb_id+"_process_value";
+    var id_status = data.pcb_id+"_status";
+    var id_nextstation = data.pcb_id+"_nextstation";
+
+    var progress = data.progress;
+    if(progress == "pending"){
+        if(data.workstation_name == "Top workstation")
+            line_1_process = 0;
+        else if(data.workstation_name == "Bot workstation")
+            line_2_process = 0;
+        $("#"+id_ps).remove();
+        $("#"+id).append("<div id = '"+id_ps+"' class='progress-bar progress-bar-warning' role='progressbar'"+
+                                    "aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Pending"+
+                                "</div>");
+    }
+    else if(progress == "running"){
+        if(data.workstation_name == "Top workstation")
+            line_1_process = 1;
+        else if(data.workstation_name == "Bot workstation")
+            line_2_process = 1;
+        $("#"+id_ps).remove();
+        $("#"+id).append("<div id = '"+id_ps+"' class='progress-bar progress-bar-striped active' role='progressbar'"+
+                                    "aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Processing"+
+                                "</div>");
+    } else if(progress == "finish"){
+        if(data.workstation_name == "Top workstation")
+            line_1_process = 0;
+        else if(data.workstation_name == "Bot workstation")
+            line_2_process = 0;
+        $("#"+id_ps).remove();
+        $("#"+id).append("<div id = '"+id_ps+"' class='progress-bar progress-bar-success' role='progressbar'"+
+                                    "aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Done"+
+                                "</div>");
+        $("#"+id_status).html(data.status);
+        //alert(data.status);
+        if(data.status == "Pass"){
+            $("#"+data.pcb_id).removeClass("danger");
+            $("#"+data.pcb_id).addClass("active");
+        }
+        else if(data.status == "Fail"){
+            $("#"+data.pcb_id).removeClass("active");
+            $("#"+data.pcb_id).addClass("danger");
+        }
+        $("#"+id_nextstation).html(data.next_wrkstn_name);
+    }
+
+  }
+
+  // pareto chart
+  var series_array=[];
+  var labels_array=[];
+
+  var myConfig = {
+      "type":"pareto",
+      "title":{
+          "text":"Pareto Error Chart",
+      },
+      "series": [
+        {
+          "values": series_array
+        }
+      ],
+      "scale-x":{
+        "labels":labels_array
+      },
+      "options":{
+        "scale-y-2":{
+          "line-color":"red",
+          "label":{
+            "text":"Percentage",
+            "font-color":"red"
+          },
+          "tick":{
+            "line-color":"red"
+          },
+          "item":{
+            "color":"red"
+          }
+        }
+      },
+      "plot":{
+        "animation":{
+          "effect":"ANIMATION_EXPAND_BOTTOM",
+          "speed":"ANIMATION_FAST",
+          "sequence":"ANIMATION_BY_PLOT",
+          "method":"ANIMATION_BOUNCE_EASE_OUT"
+        }
+      },
+      "plotarea":{
+        "margin-right":"10%"
+      }
+    };
+
+  function updateErrorParetoChart(data)
+  {
+    //console.log("data: "+data);
+    series_array = [];
+    labels_array = [];
+    for (i = 0; i < data.length; i++) {
+        if(data[i].count > 0){
+            series_array.push(data[i].count);
+            labels_array.push(data[i].name);
+        }
+    }
+
+    myConfig["series"][0].values = series_array;
+    myConfig["scale-x"].labels = labels_array;
+    //console.log(myConfig);
+    zingchart.render({
+        id : 'chartDiv',
+        data : myConfig,
+        height: 350,
+	    width: '100%'
+    });
+  }
+
+  // oee chart
+  var oeeConfig = {
+      "type":"bar3d",
+      "3d-aspect":{
+        "true3d":false,
+        "angle":75
+      },
+      "title":{
+          "text":"OEE Chart",
+      },
+      "series": [
+        {
+          "values": [0, 0, 0]
+        }
+      ],
+      "scale-x":{
+        "labels":['Availability','Performance','Quality']
+      },
+      "scale-y": {
+        "values": "0:100.0:5"
+      },
+      "plot":{
+        "value-box": {
+          "text": "%v %",
+          "font-color": "white",
+          "font-family": "Georgia",
+          "font-size": 15,
+          "font-weight": "normal",
+          "font-style": "normal"
+        },
+        "styles":["orange","blue","red"],
+        "animation":{
+          "effect":"ANIMATION_EXPAND_BOTTOM",
+          "speed":"ANIMATION_FAST",
+          "sequence":"ANIMATION_BY_PLOT",
+          "method":"ANIMATION_BOUNCE_EASE_OUT"
+        }
+      },
+      "plotarea":{
+        "margin-right":"10%"
+      }
+    };
+
+  function updateOEEChart(data)
+  {
+    oeeConfig["series"][0].values = data;
+
+    zingchart.render({
+        id : 'oee_chart',
+        data : oeeConfig,
+        height: 350,
+	    width: '100%'
+    });
+  }
+
+  // error bar chart
+
+  // realtime feed data
+  var realtimeConfig = {
+    "graphset":[
+        {
+            "type":"line",
+            "title":{
+                "text":"Line Status"
+            },
+            "legend": {
+                "highlight-plot": true
+            },
+            "plot":{
+                "aspect":"stepped",
+                "highlight-state": {
+                  "line-color": "black",
+                  "line-width": 3,
+                  "line-style": "dashdot"
+                },
+                "line-width":5
+
+            },
+            "refresh":{
+                "type":"feed",
+                "transport":"js",
+                "url":"feed()",
+                "interval":100,
+                "reset-timeout":100000
+            },
+            "plotarea": {
+                "margin-left": "dynamic"
+            },
+            "scale-y":{
+                "values":["Line Top\nStop","Line Top\nRunning","Line Bot\nStop","Line Bot\nRunning",""]
+            },
+            "series":[
+                {
+                    "values":[],
+                    "text":"Line Top"
+                },
+                {
+                    "values":[],
+                     "text":"Line Bot"
+                }
+
+            ]
+        }
+    ]
+  }
+
+  var line_1_process = 0;
+  var line_2_process = 0;
+  window.feed = function(callback) {
+    var tick = {};
+    tick.plot0 = line_1_process;
+    if(line_2_process == 0)
+        tick.plot1 = 2;
+    else
+        tick.plot1 = 3;
+
+    //console.log(JSON.stringify(tick));
+    callback(JSON.stringify(tick));
+  };
+
+  zingchart.render({
+	id : 'realtime_chart',
+	data : realtimeConfig,
+	height: 350,
+	width: "100%"
+  });
+
+  var pass = 0, error = 0, na = 0;
+  $(document).ready(function(){
+    updateErrorParetoChart({{ pareto_error | js }});
+
+    var product_data = {{ products | js }};
+
+    for(i = 0; i< product_data.length; i++)
+    {
+        if(product_data[i].status == "Pass")
+            pass++;
+        else if(product_data[i].status == "Fail")
+            error++;
+        else if(product_data[i].status == "N/A")
+            na++;
+    }
+    var availability = parseFloat((na / (pass + error + na) * 100.0).toFixed(2));
+    var performance = parseFloat((pass / (pass + error + na) * 100.0).toFixed(2));
+    var quality;
+    if(pass == 0 && error == 0)
+        quality = parseFloat("0.00");
+    else
+        quality = parseFloat((pass / (pass + error) * 100.0).toFixed(2));
+    updateOEEChart([availability, performance, quality]);
+  });
+
 </script>
+<style>
+.blink_class {
+    -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    animation-name: blink;
+    animation-duration: 1s;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes blink {
+    0%   {background-color: green; font-weight: bold;}
+    25%  {background-color: white; font-weight: bold;}
+    50%  {background-color: green; font-weight: bold;}
+    75%  {background-color: white; font-weight: bold;}
+    100% {background-color: green; font-weight: bold;}
+}
+
+/* Standard syntax */
+@keyframes blink {
+    0%   {background-color: green; font-weight: bold;}
+    25%  {background-color: white; font-weight: bold;}
+    50%  {background-color: green; font-weight: bold;}
+    75%  {background-color: white; font-weight: bold;}
+    100% {background-color: green; font-weight: bold;}
+}
+</style>
 {% endblock %}
