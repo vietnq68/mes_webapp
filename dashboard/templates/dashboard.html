@@ -30,7 +30,7 @@
     <!-- END PAGE HEADER-->
 
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <!-- BEGIN DASHBOARD STATS -->
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -71,95 +71,125 @@
                 </div>
             </div>
             <!-- END DASHBOARD STATS -->
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <!-- BEGIN TABLE STATS -->
-                    <div class="portlet box blue">
-                        <div class="portlet-title">
-                            <div class="caption">
-                                <i class="fa fa-comments"></i>Products
-                            </div>
-                            <div class="tools">
-                                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
-                                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title=""
-                                   title=""> </a>
-                                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
-                                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
-                            </div>
-                        </div>
-                        <div class="portlet-body">
-                            <div class="table-scrollable">
-                                <table class="table table-bordered table-hover" id="table_report">
-                                    <thead>
-                                    <tr>
-                                        <th> ID</th>
-                                        <th> Current Station</th>
-                                        <th> Next Station</th>
-                                        <th> Process</th>
-                                        <th> Time Scan</th>
-                                        <th> Status</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for item in products %}
-                                    <tr id="{{ item.pcb_id }}" class="{% if item.status == 'Pass' %}active{% elif item.status == 'Fail' %}danger{% endif %}">
-                                        <td> {{ item.pcb_id }}</td>
-                                        {% if item.current_wrkstn_id %}
-                                            {% for works in workstations %}
-                                                {% if works|get:"_id" == item.current_wrkstn_id %}
-                                                <td> {{ works.name }}</td>
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% else %}
-                                            <td>Stand by</td>
-                                        {% endif %}
-
-                                        {% for works in workstations %}
-                                        {% if works|get:"_id" == item.next_wrkstn_id %}
-                                        <td id="{{ item.pcb_id }}_nextstation"> {{ works.name }}</td>
-                                        {% endif %}
-                                        {% endfor %}
-                                        <td id="{{ item.pcb_id }}_process">
-
-                                        </td>
-                                        <td> {{ item.scan_time }}</td>
-                                        <td id="{{ item.pcb_id }}_status"> {{ item.status }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END TABLE STATS -->
-                </div>
-            </div>
         </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <!-- BEGIN PARETO CHART -->
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    </div>
+    <div class="row">
+        <!--<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">-->
+            <!--<div class="portlet light bordered">-->
+                <!--<div class="portlet-title">-->
+                    <!--<div class="caption">-->
+                        <!--<i class="icon-bar-chart font-green-haze"></i>-->
+                        <!--<span class="caption-subject bold font-green-haze">Biểu đồ thời gian thực dây chuyền</span>-->
+                    <!--</div>-->
+                    <!--<div class="tools">-->
+                        <!--<a href="javascript:;" class="collapse" data-original-title="" title=""> </a>-->
+                        <!--<a href="javascript:;" class="fullscreen" data-original-title="" title=""></a>-->
+                        <!--&lt;!&ndash;<a href="javascript:;" class="remove" data-original-title="" title=""> </a>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="portlet-body">-->
+                    <!--<div id="realtime_chart"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-bar-chart font-green-haze"></i>
+                        <span class="caption-subject bold font-green-haze">Biểu đồ Pareto</span>
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                        <a href="javascript:;" class="fullscreen" data-original-title="" title=""></a>
+                        <!--<a href="javascript:;" class="remove" data-original-title="" title=""> </a>-->
+                    </div>
+                </div>
+                <div class="portlet-body">
                     <div id="chartDiv"></div>
                 </div>
             </div>
+            <!-- BEGIN PARETO CHART -->
+            <!--<div class="row">-->
+                <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+                    <!--<div id="chartDiv"></div>-->
+                <!--</div>-->
+            <!--</div>-->
             <!-- END PARETO CHART-->
 
-            <div class="rơw">
-                <!-- BEGIN OEE CHAARTRT -->
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div id="oee_chart"></div>
-                </div>
-                <!-- END OEE CH-->
-
-                <!-- BEGIN REALTIME CHAARTRT -->
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div id="realtime_chart"></div>
-                </div>
-                <!-- END REALTIME CHART -->
-            </div>
 
         </div>
+    </div>
+
+    <div class="row">
+        <!-- BEGIN OEE CHAARTRT -->
+        <!--<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">-->
+        <!--<div id="oee_chart"></div>-->
+        <!--</div>-->
+        <!-- END OEE CH-->
+        <!-- BEGIN REALTIME CHAARTRT -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <!-- BEGIN TABLE STATS -->
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-bar-chart font-green-haze"></i>
+                        <span class="caption-subject bold font-green-haze">Danh sách sản phẩm</span>
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                        <a href="javascript:;" class="fullscreen" data-original-title="" title=""></a>
+                        <!--<a href="javascript:;" class="remove" data-original-title="" title=""> </a>-->
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable">
+                        <table class="table table-bordered table-hover" id="table_report">
+                            <thead>
+                            <tr>
+                                <th> ID</th>
+                                <th> Current Station</th>
+                                <th> Next Station</th>
+                                <!--<th> Process</th>-->
+                                <th> Time Scan</th>
+                                <th> Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in products %}
+                            <tr id="{{ item.pcb_id }}"
+                                class="{% if item.status == 'Pass' %}active{% elif item.status == 'Fail' %}danger{% endif %}">
+                                <td> {{ item.pcb_id }}</td>
+                                {% if item.current_wrkstn_id %}
+                                {% for works in workstations %}
+                                {% if works|get:"_id" == item.current_wrkstn_id %}
+                                <td> {{ works.name }}</td>
+                                {% endif %}
+                                {% endfor %}
+                                {% else %}
+                                <td>Stand by</td>
+                                {% endif %}
+
+                                {% for works in workstations %}
+                                {% if works|get:"_id" == item.next_wrkstn_id %}
+                                <td id="{{ item.pcb_id }}_nextstation"> {{ works.name }}</td>
+                                {% endif %}
+                                {% endfor %}
+                                <!--<td id="{{ item.pcb_id }}_process">-->
+
+                                <!--</td>-->
+                                <td> {{ item.scan_time }}</td>
+                                <td id="{{ item.pcb_id }}_status"> {{ item.status }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- END TABLE STATS -->
+        </div>
+        <!-- END REALTIME CHART -->
     </div>
 
     <div class="clearfix">
@@ -171,9 +201,9 @@
 
 
 {% block page_scripts %}
-<script src="http://localhost:8090/socket.io/socket.io.js"></script>
+<script src="http://10.2.8.35:8090/socket.io/socket.io.js"></script>
 <script>
-  var socket = io('http://localhost:8090');
+  var socket = io('http://10.2.8.35:8090');
   socket.on('finished_product_event',function(msg) {
     console.log(msg);
     var span = $('#finished_number');
@@ -183,10 +213,10 @@
     span.text(number+1);
 
     pass++;
-    var availability = parseFloat((na / (pass + error + na) * 100.0).toFixed(2));
-    var performance = parseFloat((pass / (pass + error + na) * 100.0).toFixed(2));
-    var quality = parseFloat((pass / (pass + error) * 100.0).toFixed(2));
-    updateOEEChart([availability, performance, quality]);
+    <!--var availability = parseFloat((na / (pass + error + na) * 100.0).toFixed(2));-->
+    <!--var performance = parseFloat((pass / (pass + error + na) * 100.0).toFixed(2));-->
+    <!--var quality = parseFloat((pass / (pass + error) * 100.0).toFixed(2));-->
+    <!--updateOEEChart([availability, performance, quality]);-->
   });
   socket.on('error_product_event',function(msg) {
     console.log(msg);
@@ -197,10 +227,10 @@
     span.text(number+1);
 
     error++;
-    var availability = parseFloat((na / (pass + error + na) * 100.0).toFixed(2));
-    var performance = parseFloat((pass / (pass + error + na) * 100.0).toFixed(2));
-    var quality = parseFloat((pass / (pass + error) * 100.0).toFixed(2));
-    updateOEEChart([availability, performance, quality]);
+    <!--var availability = parseFloat((na / (pass + error + na) * 100.0).toFixed(2));-->
+    <!--var performance = parseFloat((pass / (pass + error + na) * 100.0).toFixed(2));-->
+    <!--var quality = parseFloat((pass / (pass + error) * 100.0).toFixed(2));-->
+    <!--updateOEEChart([availability, performance, quality]);-->
   });
   socket.on('workstation_process',function(msg) {
     console.log(msg);
@@ -213,7 +243,6 @@
 
   // table_report
   socket.on('update_event',function(msg) {
-    console.log(msg);
     var id = msg.pcb_id;
     updateRow(id, msg);
     if(msg.current_wrkstn_name == "Top workstation")
@@ -230,9 +259,9 @@
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-    var cell5 = row.insertCell(4);
-    var cell6 = row.insertCell(5);
+    <!--var cell4 = row.insertCell(3);-->
+    var cell5 = row.insertCell(3);
+    var cell6 = row.insertCell(4);
     cell1.innerHTML = "<i class='fa fa-spinner fa-pulse'></i>&nbsp&nbsp&nbsp"+data.pcb_id;
     cell2.innerHTML = "<i class='fa fa-angle-double-right'></i>&nbsp&nbsp&nbsp"+data.current_wrkstn_name;
     if(data.next_wrkstn_name != undefined)
@@ -240,17 +269,17 @@
     else
         cell3.innerHTML = "";
     cell3.id = data.pcb_id+"_nextstation";
-    cell4.id = data.pcb_id+"_process";
+    <!--cell4.id = data.pcb_id+"_process";-->
     cell5.innerHTML = data.scan_time;
     cell6.innerHTML = status;
     cell6.id = data.pcb_id+"_status";
 
     var id_ps = data.pcb_id+"_process_value";
     $("#"+id_ps).remove();
-    $("#"+data.pcb_id+"_process").append(
-                            "<div id = '"+id_ps+"' class='progress-bar progress-bar-striped active' role='progressbar'"+
-                                "aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Processing"+
-                            "</div>");
+    <!--$("#"+data.pcb_id+"_process").append(-->
+                            <!--"<div id = '"+id_ps+"' class='progress-bar progress-bar-striped active' role='progressbar'"+-->
+                                <!--"aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Processing"+-->
+                            <!--"</div>");-->
     $("#"+data.pcb_id).addClass("blink_class");
     row.addEventListener("animationend",function(e){
         $("#"+data.pcb_id).removeClass("blink_class");
@@ -262,6 +291,7 @@
             $("#"+data.pcb_id).removeClass("active");
             $("#"+data.pcb_id).addClass("danger");
         }
+        console.log(data)
         cell1.innerHTML = data.pcb_id;
         cell2.innerHTML = data.current_wrkstn_name;
         if(data.next_wrkstn_name != undefined)
@@ -298,9 +328,9 @@
         else if(data.workstation_name == "Bot workstation")
             line_2_process = 0;
         $("#"+id_ps).remove();
-        $("#"+id).append("<div id = '"+id_ps+"' class='progress-bar progress-bar-warning' role='progressbar'"+
-                                    "aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Pending"+
-                                "</div>");
+        <!--$("#"+id).append("<div id = '"+id_ps+"' class='progress-bar progress-bar-warning' role='progressbar'"+-->
+                                    <!--"aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Pending"+-->
+                                <!--"</div>");-->
     }
     else if(progress == "running"){
         if(data.workstation_name == "Top workstation")
@@ -308,18 +338,18 @@
         else if(data.workstation_name == "Bot workstation")
             line_2_process = 1;
         $("#"+id_ps).remove();
-        $("#"+id).append("<div id = '"+id_ps+"' class='progress-bar progress-bar-striped active' role='progressbar'"+
-                                    "aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Processing"+
-                                "</div>");
+        <!--$("#"+id).append("<div id = '"+id_ps+"' class='progress-bar progress-bar-striped active' role='progressbar'"+-->
+                                    <!--"aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Processing"+-->
+                                <!--"</div>");-->
     } else if(progress == "finish"){
         if(data.workstation_name == "Top workstation")
             line_1_process = 0;
         else if(data.workstation_name == "Bot workstation")
             line_2_process = 0;
         $("#"+id_ps).remove();
-        $("#"+id).append("<div id = '"+id_ps+"' class='progress-bar progress-bar-success' role='progressbar'"+
-                                    "aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Done"+
-                                "</div>");
+        <!--$("#"+id).append("<div id = '"+id_ps+"' class='progress-bar progress-bar-success' role='progressbar'"+-->
+                                    <!--"aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width:100%'>Done"+-->
+                                <!--"</div>");-->
         $("#"+id_status).html(data.status);
         //alert(data.status);
         if(data.status == "Pass"){
@@ -354,16 +384,16 @@
       },
       "options":{
         "scale-y-2":{
-          "line-color":"red",
+          "line-color":"#E7505A",
           "label":{
             "text":"Percentage",
-            "font-color":"red"
+            "font-color":"#E7505A"
           },
           "tick":{
-            "line-color":"red"
+            "line-color":"#E7505A"
           },
           "item":{
-            "color":"red"
+            "color":"#E7505A"
           }
         }
       },
@@ -405,11 +435,11 @@
 
   // oee chart
   var oeeConfig = {
-      "type":"bar3d",
-      "3d-aspect":{
-        "true3d":false,
-        "angle":75
-      },
+      "type":"bar",
+      <!--"3d-aspect":{-->
+        <!--"true3d":false,-->
+        <!--"angle":75-->
+      <!--},-->
       "title":{
           "text":"OEE Chart",
       },
@@ -433,7 +463,7 @@
           "font-weight": "normal",
           "font-style": "normal"
         },
-        "styles":["orange","blue","red"],
+        "styles":["#E87E04","#3598dc","#EF4836"],
         "animation":{
           "effect":"ANIMATION_EXPAND_BOTTOM",
           "speed":"ANIMATION_FAST",
@@ -492,7 +522,7 @@
                 "margin-left": "dynamic"
             },
             "scale-y":{
-                "values":["Line Top\nStop","Line Top\nRunning","Line Bot\nStop","Line Bot\nRunning",""]
+                "values":["Line Top\nOFF","Line Top\nON","Line Bot\nOFF","Line Bot\nON",""]
             },
             "series":[
                 {
@@ -523,12 +553,12 @@
     callback(JSON.stringify(tick));
   };
 
-  zingchart.render({
-	id : 'realtime_chart',
-	data : realtimeConfig,
-	height: 350,
-	width: "100%"
-  });
+  <!--zingchart.render({-->
+	<!--id : 'realtime_chart',-->
+	<!--data : realtimeConfig,-->
+	<!--height: 350,-->
+	<!--width: "100%"-->
+  <!--});-->
 
   var pass = 0, error = 0, na = 0;
   $(document).ready(function(){
@@ -552,8 +582,10 @@
         quality = parseFloat("0.00");
     else
         quality = parseFloat((pass / (pass + error) * 100.0).toFixed(2));
-    updateOEEChart([availability, performance, quality]);
+    <!--updateOEEChart([availability, performance, quality]);-->
   });
+
+
 
 </script>
 <style>
@@ -566,20 +598,22 @@
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes blink {
-    0%   {background-color: green; font-weight: bold;}
+    0%   {background-color: #26C281; font-weight: bold;}
     25%  {background-color: white; font-weight: bold;}
-    50%  {background-color: green; font-weight: bold;}
+    50%  {background-color: #26C281; font-weight: bold;}
     75%  {background-color: white; font-weight: bold;}
-    100% {background-color: green; font-weight: bold;}
+    100% {background-color: #26C281; font-weight: bold;}
 }
 
 /* Standard syntax */
 @keyframes blink {
-    0%   {background-color: green; font-weight: bold;}
+    0%   {background-color: #26C281; font-weight: bold;}
     25%  {background-color: white; font-weight: bold;}
-    50%  {background-color: green; font-weight: bold;}
+    50%  {background-color: #26C281; font-weight: bold;}
     75%  {background-color: white; font-weight: bold;}
-    100% {background-color: green; font-weight: bold;}
+    100% {background-color: #26C281; font-weight: bold;}
 }
+
+
 </style>
 {% endblock %}
